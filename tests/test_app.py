@@ -8,8 +8,10 @@ class SubTest1(BaseTest):
     @classmethod
     def setup_class(cls):
         BaseTest.setup_class()
-        if cls.upload:
-            upload_app(cls.app_path, cls.username, cls.access_key)
+        if cls.upload and cls.sim_app_path is not None:
+            upload_app(cls.sim_app_path, cls.username, cls.access_key)
+        if cls.upload and cls.dev_app_path is not None:
+            upload_app(cls.dev_app_path, cls.username, cls.access_key)
 
     def test_sum1(self):
         # populate text fields with values

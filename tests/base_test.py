@@ -13,11 +13,11 @@ devices = [{
     'platformVersion':  '9.0',
     'deviceOrientation':'portrait',
     },{
-    'deviceName':       'iPhone 6',
+    'deviceName':       'iPhone 6 Device',
     'appiumVersion':    '1.4.16',
     'browserName':      '',
     'platformName':     'iOS',
-    'platformVersion':  '9.1',
+    'platformVersion':  '8.4',
     'deviceOrientation':'portrait',
 }]
 
@@ -36,20 +36,26 @@ def on_platforms(platforms):
 
 
 class BaseTest(unittest.TestCase):
-    app_path = None
-    app = None
+    sim_app_path = None
+    sim_app = None
+    dev_app_path = None
+    dev_app = None
     username = None
     access_key = None
     selenium_port = None
     selenium_host = None
-    upload = True
+    upload = False
     tunnel_id = None
     build_tag = None
 
     # setUp runs before each test case
     def setUp(self):
         self.desired_capabilities['name'] = self.id()
-        self.desired_capabilities['app'] = BaseTest.app
+
+        if "device" in self.desired_capabilities['deviceName'].lower():
+            self.desired_capabilities['app'] = BaseTest.dev_app
+        else:
+            self.desired_capabilities['app'] = BaseTest.sim_app
 
         if BaseTest.tunnel_id:
             self.desired_capabilities['tunnel-identifier'] = BaseTest.tunnel_id
@@ -80,17 +86,31 @@ class BaseTest(unittest.TestCase):
         cls.tunnel_id = os.environ.get('TUNNEL_IDENTIFIER', None)
         cls.username = os.environ.get('SAUCE_USERNAME', None)
         cls.access_key = os.environ.get('SAUCE_ACCESS_KEY', None)
-        cls.app_path = os.environ.get("APP", None)
-        if cls.app_path:
-            if cls.app_path and (cls.app_path.startswith('http://') or cls.app_path.startswith('http://')):
-                cls.app = cls.app_path
-                cls.upload = False
+        cls.sim_app_path = None
+        cls.dev_app_path = None
+
+        if cls.sim_app_path:
+            if cls.sim_app_path and (cls.sim_app_path.startswith('http://') or cls.sim_app_path.startswith('http://')):
+                cls.sim_app = cls.sim_app_path
+                cls.upload = cls.upload or False
             else:
-                cls.app = "sauce-storage:%s" % (os.path.basename(cls.app_path))
+                cls.sim_app = "sauce-storage:%s" % (os.path.basename(cls.sim_app_path))
                 cls.upload = True
         else:
-            cls.app = "sauce-storage:TestApp8.4.app.zip"
-            cls.app_path = os.path.realpath(__file__ + "/../../resources/TestApp8.4.app.zip")
+            cls.sim_app = "sauce-storage:TestApp-sim-debug.app.zip"
+            cls.sim_app_path = os.path.realpath(__file__ + "/../../resources/TestApp-sim-debug.app.zip")
+            cls.upload = True
+
+        if cls.dev_app_path:
+            if cls.dev_app_path and (cls.dev_app_path.startswith('http://') or cls.dev_app_path.startswith('http://')):
+                cls.dev_app = cls.dev_app_path
+                cls.upload = cls.upload or False
+            else:
+                cls.dev_app = "sauce-storage:%s" % (os.path.basename(cls.dev_app_path))
+                cls.upload = True
+        else:
+            cls.dev_app = "sauce-storage:TestApp-dev-debug.app.zip"
+            cls.dev_app_path = os.path.realpath(__file__ + "/../../resources/TestApp-dev-debug.app.zip")
             cls.upload = True
 
         cls.selenium_port = os.environ.get("SELENIUM_PORT", None)
