@@ -33,6 +33,16 @@ This code is provided on an "AS-IS” basis without warranty of any kind, either
 Tests in Parallel:
 ```$ py.test -s -n 10 tests```
 
+### Running Tests Locally:
+*   Have Appium installed locally and the server running on localhost:4723
+*   In the terminal export LOCAL_APPIUM variable to TRUE:
+    ```
+    $ export LOCAL_APPIUM=TRUE
+    ```
+    This will ignore all Sauce Labs settings.
+*   Start test execution serially.
+    ```$ py.test -s tests```
+
 [Sauce Labs Dashboard](https://saucelabs.com/beta/dashboard/)
 
 ### Advice/Troubleshooting
