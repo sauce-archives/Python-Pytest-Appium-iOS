@@ -5,21 +5,24 @@ import new
 from appium import webdriver
 from sauceclient import SauceClient
 
-devices = [{
-    'deviceName':       'iPhone 5',
-    'appiumVersion':    '1.4.16',
-    'browserName':      '',
-    'platformName':     'iOS',
-    'platformVersion':  '9.0',
-    'deviceOrientation':'portrait',
-    },{
-    'deviceName':       'iPhone 6 Device',
-    'appiumVersion':    '1.4.16',
-    'browserName':      '',
-    'platformName':     'iOS',
-    'platformVersion':  '8.4',
-    'deviceOrientation':'portrait',
-}]
+devices = [
+    {
+        'deviceName': 'iPhone 6',
+        'appiumVersion': '1.4.16',
+        'browserName': '',
+        'platformName': 'iOS',
+        'platformVersion': '9.0',
+        'deviceOrientation': 'portrait',
+    },
+    {
+        'deviceName': 'iPhone 6 Device',
+        'appiumVersion': '1.4.16',
+        'browserName': '',
+        'platformName': 'iOS',
+        'platformVersion': '8.4',
+        'deviceOrientation': 'portrait',
+    },
+]
 
 
 # This decorator is required to iterate over browsers
@@ -63,12 +66,12 @@ class BaseTest(unittest.TestCase):
             self.desired_capabilities['build'] = BaseTest.build_tag
 
         self.driver = webdriver.Remote(
-                command_executor="http://%s:%s@%s:%s/wd/hub" %
-                                 (BaseTest.username,
-                                  BaseTest.access_key,
-                                  BaseTest.selenium_host,
-                                  BaseTest.selenium_port),
-                desired_capabilities=self.desired_capabilities)
+            command_executor="http://%s:%s@%s:%s/wd/hub" %
+                             (BaseTest.username,
+                              BaseTest.access_key,
+                              BaseTest.selenium_host,
+                              BaseTest.selenium_port),
+            desired_capabilities=self.desired_capabilities)
 
     # tearDown runs after each test case
     def tearDown(self):
@@ -97,8 +100,8 @@ class BaseTest(unittest.TestCase):
                 cls.sim_app = "sauce-storage:%s" % (os.path.basename(cls.sim_app_path))
                 cls.upload = True
         else:
-            cls.sim_app = "sauce-storage:TestApp-sim-debug.app.zip"
-            cls.sim_app_path = os.path.realpath(__file__ + "/../../resources/TestApp-sim-debug.app.zip")
+            cls.sim_app = "sauce-storage:GuineaPig-sim-debug.app.zip"
+            cls.sim_app_path = os.path.realpath(__file__ + "/../../resources/GuineaPig-sim-debug.app.zip")
             cls.upload = True
 
         if cls.dev_app_path:
@@ -109,8 +112,8 @@ class BaseTest(unittest.TestCase):
                 cls.dev_app = "sauce-storage:%s" % (os.path.basename(cls.dev_app_path))
                 cls.upload = True
         else:
-            cls.dev_app = "sauce-storage:TestApp-dev-debug.app.zip"
-            cls.dev_app_path = os.path.realpath(__file__ + "/../../resources/TestApp-dev-debug.app.zip")
+            cls.dev_app = "sauce-storage:GuineaPig-dev-debug.app.zip"
+            cls.dev_app_path = os.path.realpath(__file__ + "/../../resources/GuineaPig-dev-debug.app.zip")
             cls.upload = True
 
         cls.selenium_port = os.environ.get("SELENIUM_PORT", None)
